@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://screencleaner.gumber.ai/sitemap.xml

@@ -1,6 +1,10 @@
-# Clean Mode – Keyboard & Screen Cleaner
+# Clean Mode – Keyboard Cleaner & Screen Cleaner
 
-**Live:** https://keycleaner.gumber.ai/
+**Live:**
+- https://keycleaner.gumber.ai/ – Keyboard Cleaner, for laptop keyboards and trackpads
+- https://screencleaner.gumber.ai/ – Screen Cleaner, for phones, tablets and touchscreens
+
+Both sites run the same app. Each has its own page text, title, FAQ, share image, sitemap, robots.txt and llms.txt, so search engines treat them as two different sites.
 
 A web page that locks your keyboard, trackpad or touchscreen on a timer so you can wipe it clean without typing, clicking, tapping or swiping anything. Works on Mac, Windows, iPhone, iPad and Android.
 
@@ -43,15 +47,24 @@ The operating system handles some keys before any browser sees them.
 
 ## Files
 
-- `public/index.html`: the page, cleaning guide and FAQ
-- `public/app.js`: the lock logic
-- `public/og.png`, `public/favicon.svg`, `public/icon-*.png`: share image and icons
-- `public/manifest.webmanifest`: lets phones add Clean Mode to the home screen
-- `public/sitemap.xml`, `public/robots.txt`: for search engines
-- `public/llms.txt`: a plain summary for AI assistants
-- `public/_headers`: security and caching headers for Cloudflare
-- `public/404.html`: page shown for unknown addresses
+- `public/app.js`: the lock logic, shared by both sites
+- `public/index.html`: Keyboard Cleaner page (built, don't edit by hand)
+- `public/_screen/`: Screen Cleaner's page, share image, robots.txt, sitemap, llms.txt and manifest
+- `public/og.png`, `public/llms.txt`, `public/robots.txt`, `public/sitemap.xml`, `public/manifest.webmanifest`: Keyboard Cleaner's versions
+- `public/favicon.svg`, `public/icon-*.png`, `public/404.html`: shared
+- `site/template.html`: the page shared by both sites
+- `site/key/`, `site/screen/`: each site's head tags, intro and guide
+- `site/build.py`: builds both pages from the template
+- `src/worker.js`: picks the right files for each domain and sets security headers
 - `wrangler.toml`: Cloudflare Worker settings
+
+## Editing the pages
+
+Edit `site/template.html` (shared layout and app) or `site/key/*` / `site/screen/*` (per-site text), then rebuild:
+
+```bash
+python3 site/build.py
+```
 
 ## Deploy to Cloudflare
 

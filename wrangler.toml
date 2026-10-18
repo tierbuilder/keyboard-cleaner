@@ -1,7 +1,11 @@
-# Cloudflare Worker that serves Clean Mode as a static site
+# Cloudflare Worker serving Keyboard Cleaner (keycleaner.gumber.ai)
+# and Screen Cleaner (screencleaner.gumber.ai) from the same files.
 name = "keyboard-cleaner"
+main = "src/worker.js"
 compatibility_date = "2026-10-01"
 
 [assets]
 directory = "./public"
+binding = "ASSETS"
 not_found_handling = "404-page"
+run_worker_first = true
