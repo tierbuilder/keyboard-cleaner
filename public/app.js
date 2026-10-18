@@ -26,7 +26,11 @@
     : /Firefox\/|FxiOS\//.test(ua) ? 'Firefox' : /Chrome\/|CriOS\//.test(ua) ? 'Chrome'
     : /Safari\//.test(ua) ? 'Safari' : 'your browser';
   const canLockKeys = !!(navigator.keyboard && navigator.keyboard.lock);
+  // Full screen: standard API, Safari's webkit-prefixed one (iPad), or already running as a home screen app.
   const canFullscreen = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+  const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+  const isHomeScreenApp = navigator.standalone === true ||
+    matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
   const isTouch = () => os === 'ios' || os === 'android';
   const osNames = { mac: 'Mac', win: 'Windows PC', ios: /ipad/i.test(ua) || iPadOS ? 'iPad' : 'iPhone', android: 'Android device' };
 
@@ -35,9 +39,11 @@
     return [
       ['yes', 'Taps, swipes, scrolling and pinch-zoom on the page', 'Blocked.'],
       ['yes', 'Black screen', 'Shows fingerprints and smudges so you can wipe them away.'],
-      canFullscreen
-        ? ['yes', 'Full screen', `Hides the browser bars while you clean.`]
-        : ['setup', 'Full screen', `${osNames.ios} browsers can't hide the address bar. For a full black screen, tap Share → Add to Home Screen and open Clean Mode from there.`],
+      isHomeScreenApp
+        ? ['yes', 'Full screen', 'Running from your Home Screen, so there is no address bar.']
+        : canFullscreen
+          ? ['yes', 'Full screen', 'Hides the address bar and browser buttons while you clean.']
+          : ['setup', 'Full screen', `Safari on ${osNames.ios} only allows full screen for videos. For a full black screen with no address bar, tap Share → Add to Home Screen and open Clean Mode from there.`],
       ios
         ? ['setup', 'Lock the whole screen, edges included', 'Turn on Guided Access in Settings → Accessibility → Guided Access. Then triple-click the side (or Home) button while Clean Mode is open. Triple-click again to end it.']
         : ['setup', 'Stop swipes leaving the page', 'Turn on app pinning in Settings → Security (or Security & privacy) → More settings → App pinning, then pin your browser from the recent apps screen.'],
@@ -142,17 +148,21 @@
   let blocked = 0, holdStart = 0, holdRaf = null, dimTimer = null;
 
   function enterFullscreen() {
+    if (isHomeScreenApp) return; // already full screen
     try {
-      Promise.resolve(app.requestFullscreen({ navigationUI: 'hide' }))
+      const req = app.requestFullscreen ? app.requestFullscreen({ navigationUI: 'hide' })
+        : app.webkitRequestFullscreen ? app.webkitRequestFullscreen() // older iPad Safari, returns nothing
+        : Promise.reject();
+      Promise.resolve(req)
         .then(() => { $('warn').hidden = true; return navigator.keyboard && navigator.keyboard.lock && navigator.keyboard.lock(); })
-        .catch(() => { if (locked && !document.fullscreenElement) $('warn').hidden = false; });
+        .catch(() => { if (locked && !fsElement()) $('warn').hidden = false; });
     } catch { $('warn').hidden = false; }
   }
 
   // Full screen can end mid-lock (Chrome exits it when esc is held ~2 s). Restore it on the next
   // click or key press, which counts as the user gesture browsers require.
   function restoreFullscreen() {
-    if (locked && !document.fullscreenElement && (document.fullscreenEnabled || document.webkitFullscreenEnabled)) enterFullscreen();
+    if (locked && !fsElement() && canFullscreen && !isHomeScreenApp) enterFullscreen();
   }
 
   function start() {
@@ -198,7 +208,9 @@
     try { navigator.keyboard && navigator.keyboard.unlock && navigator.keyboard.unlock(); } catch {}
     try { wakeLock && wakeLock.release(); } catch {}
     wakeLock = null;
-    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    if (fsElement()) {
+      try { Promise.resolve(document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen()).catch(() => {}); } catch {}
+    }
     const secs = Math.round((Date.now() - startedAt) / 1000);
     $('resultText').textContent = `All clean. ${reason} Blocked ${blocked} input${blocked === 1 ? '' : 's'} in ${fmt(secs)}.`;
     $('result').hidden = false;
@@ -298,13 +310,18 @@
 
   window.addEventListener('popstate', () => { if (locked) try { history.pushState(null, '', location.href); } catch {} });
   window.addEventListener('beforeunload', e => { if (locked) { e.preventDefault(); e.returnValue = ''; } });
-  document.addEventListener('fullscreenchange', () => {
-    if (!locked || document.fullscreenElement) return;
+  const onFullscreenChange = () => {
+    if (!locked || fsElement()) return;
     // Chrome left full screen because esc was held down: that's the user asking to unlock.
     // Require a real hold, so a cloth brushing esc in browsers without keyboard lock doesn't count.
     if (holdKind === 'esc' && Date.now() - holdStart >= 1000) return stop('Unlocked early.');
     $('warn').hidden = false; wake();
-  });
+  };
+  document.addEventListener('fullscreenchange', onFullscreenChange);
+  document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+
+  // iPhone Safari can't go full screen, so suggest adding Clean Mode to the Home Screen.
+  if ($('installTip')) $('installTip').hidden = !(os === 'ios' && !canFullscreen && !isHomeScreenApp);
   document.addEventListener('visibilitychange', async () => {
     if (locked && opts.awake && document.visibilityState === 'visible') { try { wakeLock = await navigator.wakeLock.request('screen'); } catch {} }
   });
