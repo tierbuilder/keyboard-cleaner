@@ -41,14 +41,22 @@
       "@type": "WebApplication",
       "@id": "https://keycleaner.gumber.ai/#app",
       "name": "Keyboard Cleaner",
-      "alternateName": ["Clean Mode", "Keyboard lock for cleaning", "Keyboard cleaning mode"],
+      "alternateName": [
+        "Clean Mode",
+        "Keyboard lock for cleaning",
+        "Keyboard cleaning mode"
+      ],
       "url": "https://keycleaner.gumber.ai/",
       "description": "A free web app that locks your keyboard and trackpad so you can clean them without typing, clicking or swiping anything. Unlocks on a timer or when you hold esc or the trackpad for 3 seconds.",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "macOS, Windows",
       "browserRequirements": "Works best in Google Chrome, Microsoft Edge or Arc",
       "isAccessibleForFree": true,
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
       "featureList": [
         "Blocks key presses, clicks, scrolling, pinch-zoom and swipe-back",
         "Blocks ⌘ shortcuts on Mac and the Windows key and Alt+Tab on Windows in full screen",
@@ -56,35 +64,139 @@
         "Timer from 30 seconds to 5 minutes, or no limit",
         "Unlock by holding esc or the trackpad for 3 seconds",
         "Keeps the display awake while you clean",
-        "Detects Mac or Windows and lists what it can and can't block"
+        "Detects Mac or Windows and lists what it can and can't block",
+        "Stops a cat or toddler from typing on your keyboard",
+        "Locks the keyboard and trackpad while you fit a keyboard cover, skin or trackpad protector"
       ],
-      "isPartOf": { "@id": "https://keycleaner.gumber.ai/#website" },
-      "isRelatedTo": { "@type": "WebApplication", "name": "Screen Cleaner", "url": "https://screencleaner.gumber.ai/" },
-      "author": { "@type": "Person", "name": "tierbuilder", "url": "https://github.com/tierbuilder" }
+      "isPartOf": {
+        "@id": "https://keycleaner.gumber.ai/#website"
+      },
+      "isRelatedTo": {
+        "@type": "WebApplication",
+        "name": "Screen Cleaner",
+        "url": "https://screencleaner.gumber.ai/"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "tierbuilder",
+        "url": "https://github.com/tierbuilder"
+      }
     },
     {
       "@type": "HowTo",
       "name": "How to lock your keyboard and trackpad to clean them",
       "totalTime": "PT2M",
       "step": [
-        { "@type": "HowToStep", "name": "Open Keyboard Cleaner", "text": "Open keycleaner.gumber.ai in Chrome, Edge or Arc on your Mac or Windows laptop." },
-        { "@type": "HowToStep", "name": "Pick a timer", "text": "Choose how long to lock: 30 seconds, 1, 2 or 5 minutes, or no limit." },
-        { "@type": "HowToStep", "name": "Start Cleaning Mode", "text": "Click Start Cleaning Mode. The screen goes black and the keyboard and trackpad are locked." },
-        { "@type": "HowToStep", "name": "Wipe the keyboard and trackpad", "text": "Wipe the keys and trackpad with a soft, slightly damp microfiber cloth and blow crumbs out with compressed air." },
-        { "@type": "HowToStep", "name": "Unlock", "text": "Wait for the timer, or hold esc or press and hold the trackpad for 3 seconds." }
+        {
+          "@type": "HowToStep",
+          "name": "Open Keyboard Cleaner",
+          "text": "Open keycleaner.gumber.ai in Chrome, Edge or Arc on your Mac or Windows laptop."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Pick a timer",
+          "text": "Choose how long to lock: 30 seconds, 1, 2 or 5 minutes, or no limit."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Start Cleaning Mode",
+          "text": "Click Start Cleaning Mode. The screen goes black and the keyboard and trackpad are locked."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Wipe the keyboard and trackpad",
+          "text": "Wipe the keys and trackpad with a soft, slightly damp microfiber cloth and blow crumbs out with compressed air."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Unlock",
+          "text": "Wait for the timer, or hold esc or press and hold the trackpad for 3 seconds."
+        }
       ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "How do I lock my keyboard to clean it?", "acceptedAnswer": { "@type": "Answer", "text": "Open Keyboard Cleaner in your browser and click Start Cleaning Mode. Your keyboard and trackpad are locked until the timer ends, or until you hold esc or the trackpad for 3 seconds." } },
-        { "@type": "Question", "name": "How do I temporarily disable my laptop keyboard to clean it?", "acceptedAnswer": { "@type": "Answer", "text": "You don't need to change any settings or install a driver. Keyboard Cleaner blocks every key press in your browser while you wipe, then gives the keyboard back when the timer ends." } },
-        { "@type": "Question", "name": "Do I need to install anything?", "acceptedAnswer": { "@type": "Answer", "text": "No. Keyboard Cleaner runs entirely in your browser. Nothing is installed, and nothing you type or click is uploaded." } },
-        { "@type": "Question", "name": "Why do the volume and brightness keys still work?", "acceptedAnswer": { "@type": "Answer", "text": "macOS and Windows handle these keys before any browser sees them. On a Mac, turn on Use F1, F2, etc. keys as standard function keys in Keyboard settings. On Windows, turn on Fn Lock. Keyboard Cleaner then blocks them." } },
-        { "@type": "Question", "name": "Does it work on Mac and Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. It works on Mac and Windows in Chrome, Edge and Arc. Safari and Firefox work too, but can't block system shortcuts like Command-Tab." } },
-        { "@type": "Question", "name": "Can I clean my keyboard without turning off my computer?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Keyboard Cleaner locks the keyboard and trackpad while your computer stays on, so nothing happens when you wipe the keys." } },
-        { "@type": "Question", "name": "How do I unlock it?", "acceptedAnswer": { "@type": "Answer", "text": "It unlocks on its own when the timer ends. To unlock early, hold esc or press and hold the trackpad for 3 seconds." } },
-        { "@type": "Question", "name": "Can I use it to clean my phone or tablet screen?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. For phones, iPads and touchscreens, use Screen Cleaner at screencleaner.gumber.ai. It locks the touchscreen and turns it black so you can see and wipe away fingerprints." } }
+        {
+          "@type": "Question",
+          "name": "How do I lock my keyboard to clean it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Open Keyboard Cleaner in your browser and click Start Cleaning Mode. Your keyboard and trackpad are locked until the timer ends, or until you hold esc or the trackpad for 3 seconds."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I temporarily disable my laptop keyboard to clean it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You don't need to change any settings or install a driver. Keyboard Cleaner blocks every key press in your browser while you wipe, then gives the keyboard back when the timer ends."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need to install anything?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Keyboard Cleaner runs entirely in your browser. Nothing is installed, and nothing you type or click is uploaded."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why do the volume and brightness keys still work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "macOS and Windows handle these keys before any browser sees them. On a Mac, turn on Use F1, F2, etc. keys as standard function keys in Keyboard settings. On Windows, turn on Fn Lock. Keyboard Cleaner then blocks them."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it work on Mac and Windows?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. It works on Mac and Windows in Chrome, Edge and Arc. Safari and Firefox work too, but can't block system shortcuts like Command-Tab."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I clean my keyboard without turning off my computer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Keyboard Cleaner locks the keyboard and trackpad while your computer stays on, so nothing happens when you wipe the keys."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I unlock it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It unlocks on its own when the timer ends. To unlock early, hold esc or press and hold the trackpad for 3 seconds."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it stop my cat from typing on my keyboard?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Set the timer to No limit and start Keyboard Cleaner before you step away. Every key press is ignored until you hold esc or press and hold the trackpad for 3 seconds."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use it while putting on a keyboard cover or trackpad protector?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Lock the keyboard and trackpad first, so pressing the cover or protector into place doesn't type or click anything."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use it to clean my phone or tablet screen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. For phones, iPads and touchscreens, use Screen Cleaner at screencleaner.gumber.ai. It locks the touchscreen and turns it black so you can see and wipe away fingerprints."
+          }
+        }
       ]
     }
   ]
