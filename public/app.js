@@ -111,7 +111,7 @@
 
   function unlockPhrase() {
     const ways = [];
-    if (isTouch()) return opts.holdPad ? 'press and hold the status card for 3 seconds' : '';
+    if (isTouch()) return opts.holdPad ? 'long-press the card on screen for 3 seconds' : '';
     if (opts.holdEsc) ways.push('hold esc');
     if (opts.holdPad) ways.push('press and hold the trackpad');
     return ways.length ? ways.join(' or ') + ' for 3 seconds' : '';
@@ -123,6 +123,7 @@
     return `To unlock, ${u}.`;
   }
   function hintText() {
+    if (isTouch()) return opts.holdPad ? 'Long-press this card for 3 seconds to exit.' : 'Exits when the timer ends.';
     const u = unlockPhrase();
     return u ? u[0].toUpperCase() + u.slice(1) + ' to unlock.' : 'Unlocks when the timer ends.';
   }

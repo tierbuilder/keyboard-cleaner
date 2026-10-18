@@ -78,8 +78,8 @@
         { "@type": "Question", "name": "Why do the volume and brightness keys still work?", "acceptedAnswer": { "@type": "Answer", "text": "macOS and Windows handle these keys before any browser sees them. On a Mac, turn on Use F1, F2, etc. keys as standard function keys in Keyboard settings. On Windows, turn on Fn Lock. Clean Mode then blocks them." } },
         { "@type": "Question", "name": "Does it work on Mac and Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Clean Mode works on Mac and Windows in Chrome, Edge and Arc. Safari and Firefox work too, but can't block system shortcuts like Command-Tab." } },
         { "@type": "Question", "name": "Can I clean my keyboard without turning off my computer?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Clean Mode locks the keyboard and trackpad while your computer stays on, so nothing happens when you wipe the keys." } },
-        { "@type": "Question", "name": "Does it work on iPhone, iPad and Android?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Open Clean Mode in your phone or tablet browser and tap Start Cleaning Mode. The screen turns black and ignores touches, so you can wipe away fingerprints. To unlock, hold a finger still on the status card for 3 seconds. Swipes from the screen edges and the hardware buttons are handled by the phone itself; use Guided Access on iPhone or app pinning on Android to block those too." } },
-        { "@type": "Question", "name": "How do I unlock Clean Mode?", "acceptedAnswer": { "@type": "Answer", "text": "It unlocks on its own when the timer ends. To unlock early on a computer, hold esc or press and hold the trackpad for 3 seconds. On a phone or tablet, hold a finger still on the status card for 3 seconds." } }
+        { "@type": "Question", "name": "Does it work on iPhone, iPad and Android?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Open Clean Mode in your phone or tablet browser and tap Start Cleaning Mode. The screen turns black and ignores touches, so you can wipe away fingerprints. To unlock, long-press the card on screen for 3 seconds. Swipes from the screen edges and the hardware buttons are handled by the phone itself; use Guided Access on iPhone or app pinning on Android to block those too." } },
+        { "@type": "Question", "name": "How do I unlock Clean Mode?", "acceptedAnswer": { "@type": "Answer", "text": "It unlocks on its own when the timer ends. To unlock early on a computer, hold esc or press and hold the trackpad for 3 seconds. On a phone or tablet, long-press the card on screen for 3 seconds." } }
       ]
     }
   ]
@@ -208,6 +208,7 @@
   }
   .seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
   #app[data-input="touch"] .pointer-only, #app[data-input="pointer"] .touch-only { display: none; }
+  #app[data-input="touch"] .mac-only, #app[data-input="touch"] .win-only { display: none; }
   .os-pick { color: var(--muted); font-size: 13px; display: inline-flex; gap: 6px; align-items: center; }
   .os-pick select { font: inherit; color: var(--fg); background: var(--window); border: 1px solid var(--line); border-radius: 7px; padding: 2px 6px; }
   .detect { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; font-size: 13.5px; }
@@ -253,6 +254,8 @@
   .bar div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
   .bar.hold div { background: #3fd28f; }
   .st-hint { font-size: 12.5px; opacity: .75; }
+  #app[data-input="touch"] .status.dim { opacity: .5; }
+  #app[data-input="touch"] .st-hint { font-size: 15px; font-weight: 600; opacity: 1; }
   .st-count { font: 500 12px var(--font-mono); opacity: .6; font-variant-numeric: tabular-nums; }
   .st-warn { font-size: 12px; color: #f2c46b; }
   .ripple {
@@ -322,7 +325,7 @@
         </div>
 
         <div class="panel" id="p-unlock" role="tabpanel" hidden>
-          <label class="check"><input type="checkbox" id="optHoldPad" checked><span class="pointer-only">Press and hold the trackpad for 3 seconds<small>Hold one click down without moving. Normal wiping won't trigger it.</small></span><span class="touch-only">Hold a finger still on the status card for 3 seconds<small>Moving, or touching in more than one place, cancels it, so wiping won't trigger it.</small></span></label>
+          <label class="check"><input type="checkbox" id="optHoldPad" checked><span class="pointer-only">Press and hold the trackpad for 3 seconds<small>Hold one click down without moving. Normal wiping won't trigger it.</small></span><span class="touch-only">Long-press the card on screen for 3 seconds to exit<small>Keep one finger still on the card. Moving, or touching in more than one place, cancels it, so wiping won't trigger it.</small></span></label>
           <label class="check pointer-only"><input type="checkbox" id="optHoldEsc" checked><span>Hold <kbd>esc</kbd> for 3 seconds</span></label>
           <p class="note" id="unlockNote">At least one unlock method stays on when there's no time limit.</p>
         </div>
@@ -402,7 +405,7 @@
       <h2>How to clean your phone or tablet screen</h2>
       <p>Clean Mode works on iPhone, iPad and Android too. Open this page in your phone's browser and tap Start Cleaning Mode. The screen turns black, which makes fingerprints and smudges easy to see, and taps and swipes on the page are ignored while you wipe.</p>
       <ul>
-        <li><b>Unlock:</b> hold a finger still on the status card for 3 seconds. Moving, or touching in several places at once like a cloth does, cancels it.</li>
+        <li><b>Exit:</b> long-press the card on screen for 3 seconds. Moving, or touching in several places at once like a cloth does, cancels it.</li>
         <li><b>iPhone and iPad:</b> for a lock that also covers the screen edges and Home swipe, turn on Guided Access (Settings → Accessibility → Guided Access) and triple-click the side or Home button while Clean Mode is open. For a full black screen on iPhone, add Clean Mode to your Home Screen.</li>
         <li><b>Android:</b> turn on app pinning (Settings → Security → More settings → App pinning) to stop edge swipes from leaving the page.</li>
         <li>Wipe with a soft, dry or slightly damp microfiber cloth. Avoid paper towels and harsh cleaners that can damage the screen's coating.</li>
@@ -416,8 +419,8 @@
       <details><summary>Why do the volume and brightness keys still work?</summary><p>macOS and Windows handle these keys before any browser sees them. On a Mac, turn on “Use F1, F2, etc. keys as standard function keys” in Keyboard settings. On Windows, turn on Fn Lock. Clean Mode then blocks them.</p></details>
       <details><summary>Does it work on Mac and Windows?</summary><p>Yes. Clean Mode works on Mac and Windows in Chrome, Edge and Arc. Safari and Firefox work too, but can't block system shortcuts like ⌘Tab.</p></details>
       <details><summary>Can I clean my keyboard without turning off my computer?</summary><p>Yes. Clean Mode locks the keyboard and trackpad while your computer stays on, so nothing happens when you wipe the keys.</p></details>
-      <details><summary>Does it work on iPhone, iPad and Android?</summary><p>Yes. Open Clean Mode in your phone or tablet browser and tap Start Cleaning Mode. The screen turns black and ignores touches, so you can wipe away fingerprints. To unlock, hold a finger still on the status card for 3 seconds. Swipes from the screen edges and the hardware buttons are handled by the phone itself; use Guided Access on iPhone or app pinning on Android to block those too.</p></details>
-      <details><summary>How do I unlock Clean Mode?</summary><p>It unlocks on its own when the timer ends. To unlock early on a computer, hold esc or press and hold the trackpad for 3 seconds. On a phone or tablet, hold a finger still on the status card for 3 seconds.</p></details>
+      <details><summary>Does it work on iPhone, iPad and Android?</summary><p>Yes. Open Clean Mode in your phone or tablet browser and tap Start Cleaning Mode. The screen turns black and ignores touches, so you can wipe away fingerprints. To unlock, long-press the card on screen for 3 seconds. Swipes from the screen edges and the hardware buttons are handled by the phone itself; use Guided Access on iPhone or app pinning on Android to block those too.</p></details>
+      <details><summary>How do I unlock Clean Mode?</summary><p>It unlocks on its own when the timer ends. To unlock early on a computer, hold esc or press and hold the trackpad for 3 seconds. On a phone or tablet, long-press the card on screen for 3 seconds.</p></details>
     </section>
 
     <footer class="site-foot">
@@ -437,7 +440,7 @@
       <div class="st-hint" id="hint">Hold esc or press and hold the trackpad for 3 s to unlock.</div>
       <div class="bar hold"><div id="holdFill"></div></div>
       <div class="st-row"><span class="st-count" id="counter">0 inputs blocked</span></div>
-      <div class="st-warn" id="warn" hidden><span class="mac-only">Full screen is off, so ⌘ shortcuts can still work. Avoid pressing ⌘ while wiping.</span><span class="win-only">Full screen is off, so the ⊞ Win key and Alt+Tab can still work. Avoid them while wiping.</span></div>
+      <div class="st-warn" id="warn" hidden><span class="mac-only">Full screen is off, so ⌘ shortcuts can still work. Avoid pressing ⌘ while wiping.</span><span class="win-only">Full screen is off, so the ⊞ Win key and Alt+Tab can still work. Avoid them while wiping.</span><span class="touch-only">Full screen is off, so swipes from the screen edges can still leave the page. On iPhone, add Clean Mode to your Home Screen for full screen.</span></div>
     </div>
   </section>
 

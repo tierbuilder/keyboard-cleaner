@@ -14,7 +14,7 @@ Works in: Chrome, Edge and Arc on computers (best); Safari and Firefox (cannot b
 - Timer: 30 seconds, 1, 2 or 5 minutes, or no limit
 - Unlock early by holding esc or pressing and holding the trackpad for 3 seconds
 - Keeps the display awake while cleaning
-- On phones and tablets, ignores taps and swipes on the page; unlock by holding a finger still on the status card for 3 seconds
+- On phones and tablets, ignores taps and swipes on the page; unlock by long-pressing the card on screen for 3 seconds
 - Can be added to the home screen to open full screen
 - Detects Mac, Windows, iPhone, iPad or Android and lists what it can block, what needs a setting, and what it cannot block
 

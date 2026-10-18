@@ -22,7 +22,7 @@ Your options are remembered in your browser. Nothing is installed or uploaded.
 
 ## Phones and tablets
 
-Open the page in any browser on iPhone, iPad or Android and tap **Start Cleaning Mode**. The screen turns black and taps and swipes are ignored. To unlock early, hold a finger still on the status card for 3 seconds; moving or touching in several places (like a cloth) cancels it.
+Open the page in any browser on iPhone, iPad or Android and tap **Start Cleaning Mode**. The screen turns black and taps and swipes are ignored. To unlock early, long-press the card on screen for 3 seconds; moving or touching in several places (like a cloth) cancels it.
 
 - **iPhone / iPad:** turn on Guided Access to also block edge swipes and the Home gesture. Add Clean Mode to the Home Screen for a full black screen on iPhone.
 - **Android:** turn on app pinning to stop edge swipes leaving the page.
