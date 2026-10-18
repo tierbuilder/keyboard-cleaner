@@ -140,6 +140,20 @@
   let locked = false, startedAt = 0, endAt = 0, tick = null, wakeLock = null;
   let blocked = 0, holdStart = 0, holdRaf = null, dimTimer = null;
 
+  function enterFullscreen() {
+    try {
+      Promise.resolve(app.requestFullscreen({ navigationUI: 'hide' }))
+        .then(() => { $('warn').hidden = true; return navigator.keyboard && navigator.keyboard.lock && navigator.keyboard.lock(); })
+        .catch(() => { if (locked && !document.fullscreenElement) $('warn').hidden = false; });
+    } catch { $('warn').hidden = false; }
+  }
+
+  // Full screen can end mid-lock (Chrome exits it when esc is held ~2 s). Restore it on the next
+  // click or key press, which counts as the user gesture browsers require.
+  function restoreFullscreen() {
+    if (locked && !document.fullscreenElement && (document.fullscreenEnabled || document.webkitFullscreenEnabled)) enterFullscreen();
+  }
+
   function start() {
     blocked = 0; renderCount(); pointers.clear();
     $('result').hidden = true;
@@ -148,11 +162,7 @@
     $('warn').hidden = true;
 
     // Lock first; full screen, keyboard lock and wake lock are extras that may be refused or never answer.
-    try {
-      Promise.resolve(app.requestFullscreen({ navigationUI: 'hide' }))
-        .then(() => navigator.keyboard && navigator.keyboard.lock && navigator.keyboard.lock())
-        .catch(() => { if (locked && !document.fullscreenElement) $('warn').hidden = false; });
-    } catch { $('warn').hidden = false; }
+    enterFullscreen();
     if (opts.awake) { try { navigator.wakeLock.request('screen').then(l => { wakeLock = l; }).catch(() => {}); } catch {} }
 
     locked = true;
@@ -241,7 +251,7 @@
     if (!locked) return;
     e.preventDefault(); e.stopPropagation();
     if (e.key === 'Escape' && opts.holdEsc) return beginHold('esc');
-    if (!e.repeat) { count(); ripple(Math.random() * innerWidth, Math.random() * innerHeight); }
+    if (!e.repeat) { count(); ripple(Math.random() * innerWidth, Math.random() * innerHeight); restoreFullscreen(); }
   }, true);
   window.addEventListener('keyup', e => {
     if (!locked) return;
@@ -261,7 +271,7 @@
   let holdId = null, holdX = 0, holdY = 0;
   window.addEventListener('pointerdown', e => {
     if (!locked) return;
-    swallow(e); count(); ripple(e.clientX, e.clientY);
+    swallow(e); count(); ripple(e.clientX, e.clientY); restoreFullscreen();
     pointers.add(e.pointerId);
     if (pointers.size > 1) return endHold('pad');
     const onCard = e.target instanceof Node && $('status').contains(e.target);
@@ -287,7 +297,13 @@
 
   window.addEventListener('popstate', () => { if (locked) try { history.pushState(null, '', location.href); } catch {} });
   window.addEventListener('beforeunload', e => { if (locked) { e.preventDefault(); e.returnValue = ''; } });
-  document.addEventListener('fullscreenchange', () => { if (locked && !document.fullscreenElement) { $('warn').hidden = false; wake(); } });
+  document.addEventListener('fullscreenchange', () => {
+    if (!locked || document.fullscreenElement) return;
+    // Chrome left full screen because esc was held down: that's the user asking to unlock.
+    // Require a real hold, so a cloth brushing esc in browsers without keyboard lock doesn't count.
+    if (holdKind === 'esc' && Date.now() - holdStart >= 1000) return stop('Unlocked early.');
+    $('warn').hidden = false; wake();
+  });
   document.addEventListener('visibilitychange', async () => {
     if (locked && opts.awake && document.visibilityState === 'visible') { try { wakeLock = await navigator.wakeLock.request('screen'); } catch {} }
   });
