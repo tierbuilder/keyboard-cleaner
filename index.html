@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Lock your Mac or Windows keyboard and trackpad so you can wipe them clean. The screen goes black so smudges show up.">
+<title>Clean Mode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+  /* Layout: one compact app window floating on a soft wash; the lock is a black screen with a small status card. */
+  :root {
+    --wash-1: #dff3f1;
+    --wash-2: #e6ecfb;
+    --window: rgba(255,255,255,.82);
+    --panel: #f3f6f8;
+    --fg: #14202a;
+    --muted: #5b6b77;
+    --line: #dce4ea;
+    --accent: #0f8f86;
+    --accent-2: #1d6fd6;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(15,143,134,.11);
+    --ok: #16935a;
+    --warn: #a86400;
+    --bad: #c03c3c;
+    --key: #ffffff;
+    --shadow: 0 30px 80px -30px rgba(20,40,60,.35), 0 2px 6px rgba(20,40,60,.06);
+    --font-body: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --wash-1: #0c1f22; --wash-2: #111a2c; --window: rgba(22,28,36,.86); --panel: #1b232c;
+      --fg: #e6edf2; --muted: #93a2ae; --line: #2a3540; --accent: #35c2b5; --accent-2: #5b9cf0;
+      --accent-ink: #04171a; --accent-soft: rgba(53,194,181,.14); --ok: #4fd18b; --warn: #f2b84b; --bad: #f07a7a; --key: #222c36;
+      --shadow: 0 30px 80px -30px rgba(0,0,0,.7), 0 2px 6px rgba(0,0,0,.3);
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: radial-gradient(1200px 700px at 15% 0%, var(--wash-1), transparent 60%),
+                radial-gradient(1000px 700px at 100% 100%, var(--wash-2), transparent 60%), var(--panel);
+    background-color: var(--panel);
+    color: var(--fg); font: 15px/1.5 var(--font-body);
+    overscroll-behavior: none; -webkit-user-select: none; user-select: none;
+  }
+  #app { min-height: 100%; }
+  button { font-family: inherit; }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  kbd {
+    background: var(--key); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px;
+    padding: 0 6px; font: 500 12px var(--font-mono); color: var(--fg); white-space: nowrap;
+  }
+
+  /* App window */
+  .stage { min-height: 100%; display: flex; align-items: center; justify-content: center; padding: 40px 16px; }
+  .window {
+    width: 100%; max-width: 520px; background: var(--window); backdrop-filter: blur(20px);
+    border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow);
+    padding: 22px; display: flex; flex-direction: column; gap: 14px;
+  }
+  .head { display: flex; gap: 14px; align-items: center; }
+  .icon { flex: none; width: 52px; height: 52px; border-radius: 13px; background: linear-gradient(145deg, var(--accent), var(--accent-2)); display: grid; place-items: center; }
+  .icon svg { width: 34px; height: 34px; }
+  .head > div { min-width: 0; }
+  h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
+  .head p { margin: 2px 0 0; color: var(--muted); font-size: 14px; line-height: 1.4; }
+
+  .start {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 16px; border: 0; border-radius: 14px; cursor: pointer;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff;
+    font-size: 17px; font-weight: 600; box-shadow: 0 10px 24px -12px var(--accent);
+    transition: transform .12s ease, filter .12s ease;
+  }
+  .start:hover { filter: brightness(1.06); }
+  .start:active { transform: scale(.985); }
+  .start svg { width: 18px; height: 18px; }
+  .caption { margin: -4px 0 0; text-align: center; color: var(--muted); font-size: 12.5px; }
+
+  .result {
+    display: flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 12px;
+    background: var(--accent-soft); color: var(--fg); font-size: 14px;
+  }
+  .result svg { flex: none; width: 18px; height: 18px; color: var(--ok); }
+
+  /* Options */
+  .options { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+  .opt-title { font-size: 13px; font-weight: 600; }
+  .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; padding: 3px; background: var(--line); border-radius: 9px; }
+  .tabs button {
+    padding: 6px 4px; border: 0; border-radius: 7px; background: transparent; color: var(--muted);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+  }
+  .tabs button[aria-selected="true"] { background: var(--window); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+  .panel { display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+  .panel[hidden] { display: none; }
+
+  .seg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .seg button {
+    padding: 8px 0; border-radius: 9px; border: 1px solid var(--line); background: var(--window);
+    color: var(--fg); font-size: 14px; font-weight: 500; cursor: pointer;
+  }
+  .seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  .detect { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; font-size: 13.5px; }
+  .detect b { font-weight: 600; }
+  .link { border: 0; padding: 0; background: none; color: var(--accent); font-size: 13px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .checklist li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .checklist li:first-child { border-top: 0; }
+  .checklist .mark { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; margin-top: 1px; }
+  .mark.yes { background: rgba(22,147,90,.14); color: var(--ok); }
+  .mark.setup { background: rgba(214,140,20,.16); color: var(--warn); }
+  .mark.no { background: rgba(200,60,60,.13); color: var(--bad); }
+  .checklist .what { font-weight: 600; font-size: 14px; }
+  .checklist .why { color: var(--muted); font-size: 13px; }
+
+  .check { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+  .check input { margin: 3px 0 0; width: 16px; height: 16px; accent-color: var(--accent); flex: none; }
+  .check span { min-width: 0; }
+  .check small { display: block; color: var(--muted); font-size: 12.5px; }
+  .note { color: var(--muted); font-size: 13px; margin: 0; }
+  .steps { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+  .steps b { font-weight: 600; }
+  #app[data-os="mac"] .win-only, #app[data-os="win"] .mac-only { display: none; }
+
+  .foot { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 12px; padding: 0 2px; }
+
+  /* Lock screen */
+  #lock { position: fixed; inset: 0; background: var(--lock-bg, #000); cursor: none; touch-action: none; }
+  #lock.light { --lock-bg: var(--panel); }
+  .status {
+    position: absolute; left: 50%; bottom: max(48px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+    width: min(360px, calc(100% - 32px)); padding: 16px 18px; border-radius: 16px;
+    background: rgba(28,34,40,.92); color: #e8eef2; border: 1px solid rgba(255,255,255,.08);
+    display: flex; flex-direction: column; gap: 10px; transition: opacity .6s ease;
+  }
+  #lock.light .status { background: var(--window); color: var(--fg); border-color: var(--line); box-shadow: var(--shadow); }
+  .status.dim { opacity: .22; }
+  .st-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .st-label { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .st-label i { width: 8px; height: 8px; border-radius: 50%; background: #3fd28f; box-shadow: 0 0 0 4px rgba(63,210,143,.18); }
+  .st-time { font: 600 26px/1 var(--font-mono); font-variant-numeric: tabular-nums; }
+  .bar { height: 5px; border-radius: 3px; background: rgba(127,140,150,.3); overflow: hidden; }
+  .bar div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  .bar.hold div { background: #3fd28f; }
+  .st-hint { font-size: 12.5px; opacity: .75; }
+  .st-count { font: 500 12px var(--font-mono); opacity: .6; font-variant-numeric: tabular-nums; }
+  .st-warn { font-size: 12px; color: #f2c46b; }
+  .ripple {
+    position: fixed; width: 12px; height: 12px; border-radius: 50%; pointer-events: none;
+    border: 1.5px solid rgba(120,200,220,.55); transform: translate(-50%,-50%) scale(1);
+    animation: rip .8s ease-out forwards;
+  }
+  @keyframes rip { to { transform: translate(-50%,-50%) scale(7); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .ripple { display: none; } .status { transition: none; } .start { transition: none; } }
+  @media (max-width: 440px) { .seg { grid-template-columns: repeat(3, 1fr); } .tabs button { font-size: 12px; } }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <main class="stage" id="setup">
+    <div class="window">
+      <div class="head">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 34 34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="28" height="16" rx="3"/>
+            <path d="M8 16h1M12.5 16h1M17 16h1M21.5 16h1M26 16h0M8 20.5h1M26 20.5h0M12 22.5h10"/>
+            <path d="M24 3.5l1 2.3 2.3 1-2.3 1-1 2.3-1-2.3-2.3-1 2.3-1z" fill="#fff" stroke-width="1"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Clean Mode</h1>
+          <p>Locks your keyboard and trackpad so you can wipe them down without typing, clicking or swiping anything.</p>
+        </div>
+      </div>
+
+      <div class="result" id="result" hidden>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>
+        <span id="resultText">All clean.</span>
+      </div>
+
+      <button class="start" id="startBtn">
+        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5l1.9 4.6 4.6 1.9-4.6 1.9L10 14.5l-1.9-4.6L3.5 8l4.6-1.9zM16 13l.8 1.9 1.9.8-1.9.8L16 18.4l-.8-1.9-1.9-.8 1.9-.8z"/></svg>
+        Start Cleaning Mode
+      </button>
+      <p class="caption" id="caption">Locks right away.</p>
+
+      <section class="options" aria-label="Options">
+        <div class="opt-title">Options</div>
+        <div class="tabs" role="tablist">
+          <button role="tab" id="tab-timer" aria-controls="p-timer" aria-selected="true">Timer</button>
+          <button role="tab" id="tab-screen" aria-controls="p-screen" aria-selected="false">Screen</button>
+          <button role="tab" id="tab-unlock" aria-controls="p-unlock" aria-selected="false">Unlocking</button>
+          <button role="tab" id="tab-tips" aria-controls="p-tips" aria-selected="false">What's blocked</button>
+        </div>
+
+        <div class="panel" id="p-timer" role="tabpanel">
+          <div class="seg" id="durations">
+            <button id="d30" data-s="30">30 s</button>
+            <button id="d60" data-s="60">1 min</button>
+            <button id="d120" data-s="120">2 min</button>
+            <button id="d300" data-s="300">5 min</button>
+            <button id="d0" data-s="0">No limit</button>
+          </div>
+          <p class="note">Clean Mode unlocks on its own when the time is up. With “No limit” it stays locked until you unlock it yourself.</p>
+        </div>
+
+        <div class="panel" id="p-screen" role="tabpanel" hidden>
+          <label class="check"><input type="checkbox" id="optDark" checked><span>Black screen<small>Turns the whole screen black so dust and smudges on the display show up.</small></span></label>
+          <label class="check"><input type="checkbox" id="optAwake" checked><span>Keep the display awake<small>Stops the screen from dimming or sleeping while you clean.</small></span></label>
+        </div>
+
+        <div class="panel" id="p-unlock" role="tabpanel" hidden>
+          <label class="check"><input type="checkbox" id="optHoldPad" checked><span>Press and hold the trackpad for 3 seconds<small>Hold one click down. Normal wiping won't trigger it.</small></span></label>
+          <label class="check"><input type="checkbox" id="optHoldEsc" checked><span>Hold <kbd>esc</kbd> for 3 seconds</span></label>
+          <p class="note" id="unlockNote">At least one unlock method stays on when there's no time limit.</p>
+        </div>
+
+        <div class="panel" id="p-tips" role="tabpanel" hidden>
+          <div class="detect">
+            <span id="detected">Checking your computer…</span>
+            <button class="link" id="osSwitch"></button>
+          </div>
+          <ul class="checklist" id="checklist"></ul>
+          <p class="note">Use a soft, slightly damp microfiber cloth. Never spray liquid on the keyboard directly.</p>
+        </div>
+      </section>
+
+      <div class="foot"><span>Works on Mac and Windows · Best in Chrome or Edge</span><span>Nothing is installed or uploaded</span></div>
+    </div>
+  </main>
+
+  <section id="lock" hidden>
+    <div class="status" id="status">
+      <div class="st-row">
+        <span class="st-label"><i></i>Cleaning mode on</span>
+        <span class="st-time" id="time">1:00</span>
+      </div>
+      <div class="bar" id="timeBar"><div id="timeFill"></div></div>
+      <div class="st-hint" id="hint">Hold esc or press and hold the trackpad for 3 s to unlock.</div>
+      <div class="bar hold"><div id="holdFill"></div></div>
+      <div class="st-row"><span class="st-count" id="counter">0 inputs blocked</span></div>
+      <div class="st-warn" id="warn" hidden><span class="mac-only">Full screen is off, so ⌘ shortcuts can still work. Avoid pressing ⌘ while wiping.</span><span class="win-only">Full screen is off, so the ⊞ Win key and Alt+Tab can still work. Avoid them while wiping.</span></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const app = $('app');
+  const HOLD_MS = 3000;
+
+  // ---------- Options (remembered per browser) ----------
+  const defaults = { duration: 60, dark: true, awake: true, holdPad: true, holdEsc: true, tab: 'timer' };
+  let opts = { ...defaults };
+  try { Object.assign(opts, JSON.parse(localStorage.getItem('cleanmode-opts') || '{}')); } catch {}
+  const save = () => { try { localStorage.setItem('cleanmode-opts', JSON.stringify(opts)); } catch {} };
+
+  // ---------- Detect the computer and browser ----------
+  const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || navigator.userAgent;
+  const detectedOS = /win/i.test(platform) ? 'win' : /mac/i.test(platform) ? 'mac' : null;
+  let os = detectedOS || 'mac';
+  const ua = navigator.userAgent;
+  const browser = /Edg\//.test(ua) ? 'Edge' : /Firefox\//.test(ua) ? 'Firefox'
+    : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'your browser';
+  const canLockKeys = !!(navigator.keyboard && navigator.keyboard.lock);
+
+  function checklist() {
+    const mac = os === 'mac';
+    const mod = mac ? '⌘ shortcuts (⌘W, ⌘Q, ⌘Tab)' : 'Windows key, Alt+Tab, Ctrl+W';
+    return [
+      ['yes', 'Letters, numbers, arrows, space and enter', 'Blocked.'],
+      ['yes', mac ? 'Trackpad clicks, scrolling, pinch and swipe-back' : 'Touchpad and mouse clicks, scrolling and pinch', 'Blocked.'],
+      canLockKeys
+        ? ['yes', mod, `Blocked while ${browser} is in full screen.`]
+        : ['no', mod, `${browser} can't block these. Open this page in Chrome or Edge to block them.`],
+      mac
+        ? ['setup', 'Volume, brightness and media keys', 'Blocked once you turn on System Settings → Keyboard → Keyboard Shortcuts… → Function Keys → “Use F1, F2, etc. keys as standard function keys”. Turn it off again afterwards.']
+        : ['setup', 'Volume, brightness and media keys', 'Blocked once you turn on Fn Lock, usually Fn + Esc or a key with a padlock. No Fn Lock? Look in your laptop maker\'s app (Lenovo Vantage, HP, Dell, MyASUS) or the BIOS.'],
+      mac
+        ? ['setup', 'Three- and four-finger swipes', 'Mission Control and switching spaces go to macOS. Turn them off in System Settings → Trackpad → More Gestures while you clean.']
+        : ['setup', 'Three- and four-finger swipes', 'These go to Windows. Set them to “Nothing” in Settings → Bluetooth & devices → Touchpad while you clean.'],
+      mac
+        ? ['no', 'fn (🌐) key and Touch ID / power key', 'macOS handles these itself. Wipe them gently or last.']
+        : ['no', 'Ctrl+Alt+Del, Fn key and power button', 'Windows handles these itself. Wipe them gently or last.'],
+    ];
+  }
+
+  function renderChecklist() {
+    const name = os === 'mac' ? 'Mac' : 'Windows PC';
+    $('detected').innerHTML = detectedOS === os
+      ? `Detected: <b>${name}</b> with <b>${browser}</b>`
+      : `Showing: <b>${name}</b>`;
+    $('osSwitch').textContent = os === 'mac' ? 'Using Windows?' : 'Using a Mac?';
+    const icon = { yes: '✓', setup: '!', no: '✕' };
+    const label = { yes: 'Blocked', setup: 'Needs a setting', no: 'Not blocked' };
+    $('checklist').innerHTML = checklist().map(([k, what, why]) =>
+      `<li><span class="mark ${k}" title="${label[k]}" aria-label="${label[k]}">${icon[k]}</span><span><div class="what">${what}</div><div class="why">${why}</div></span></li>`
+    ).join('');
+  }
+
+  const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+  const durLabel = s => s === 0 ? null : s < 60 ? `${s} seconds` : s === 60 ? '1 minute' : `${s / 60} minutes`;
+
+  function renderOptions() {
+    document.querySelectorAll('#durations button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.s === opts.duration));
+    $('optDark').checked = opts.dark;
+    $('optAwake').checked = opts.awake;
+    // With no time limit, one unlock method must stay on.
+    if (opts.duration === 0 && !opts.holdPad && !opts.holdEsc) opts.holdEsc = true;
+    $('optHoldPad').checked = opts.holdPad;
+    $('optHoldEsc').checked = opts.holdEsc;
+    app.dataset.os = os;
+    renderChecklist();
+    document.querySelectorAll('.tabs button').forEach(b => {
+      const on = b.id === 'tab-' + opts.tab;
+      b.setAttribute('aria-selected', on);
+      $(b.getAttribute('aria-controls')).hidden = !on;
+    });
+    $('caption').textContent = 'Locks right away. ' + caption();
+    $('hint').textContent = hintText();
+    save();
+  }
+
+  function unlockPhrase() {
+    const ways = [];
+    if (opts.holdEsc) ways.push('hold esc');
+    if (opts.holdPad) ways.push('press and hold the trackpad');
+    return ways.length ? ways.join(' or ') + ' for 3 seconds' : '';
+  }
+  function caption() {
+    const t = durLabel(opts.duration), u = unlockPhrase();
+    if (t && u) return `Unlocks after ${t}, or ${u}.`;
+    if (t) return `Unlocks after ${t}.`;
+    return `To unlock, ${u}.`;
+  }
+  function hintText() {
+    const u = unlockPhrase();
+    return u ? u[0].toUpperCase() + u.slice(1) + ' to unlock.' : 'Unlocks when the timer ends.';
+  }
+
+  $('durations').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { opts.duration = +b.dataset.s; renderOptions(); } });
+  $('osSwitch').addEventListener('click', () => { os = os === 'mac' ? 'win' : 'mac'; renderOptions(); });
+  document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { opts.tab = b.id.slice(4); renderOptions(); } });
+  $('optDark').addEventListener('change', e => { opts.dark = e.target.checked; renderOptions(); });
+  $('optAwake').addEventListener('change', e => { opts.awake = e.target.checked; renderOptions(); });
+  $('optHoldPad').addEventListener('change', e => { opts.holdPad = e.target.checked; renderOptions(); });
+  $('optHoldEsc').addEventListener('change', e => { opts.holdEsc = e.target.checked; renderOptions(); });
+  renderOptions();
+
+  // ---------- Lock ----------
+  let locked = false, startedAt = 0, endAt = 0, tick = null, wakeLock = null;
+  let blocked = 0, holdStart = 0, holdRaf = null, dimTimer = null;
+
+  function start() {
+    blocked = 0; renderCount();
+    $('result').hidden = true;
+    $('lock').classList.toggle('light', !opts.dark);
+    $('timeBar').hidden = opts.duration === 0;
+    $('warn').hidden = true;
+
+    // Lock first; full screen, keyboard lock and wake lock are extras that may be refused or never answer.
+    try {
+      Promise.resolve(app.requestFullscreen({ navigationUI: 'hide' }))
+        .then(() => navigator.keyboard && navigator.keyboard.lock && navigator.keyboard.lock())
+        .catch(() => { if (locked && !document.fullscreenElement) $('warn').hidden = false; });
+    } catch { $('warn').hidden = false; }
+    if (opts.awake) { try { navigator.wakeLock.request('screen').then(l => { wakeLock = l; }).catch(() => {}); } catch {} }
+
+    locked = true;
+    startedAt = Date.now();
+    endAt = opts.duration ? startedAt + opts.duration * 1000 : 0;
+    $('setup').hidden = true;
+    $('lock').hidden = false;
+    try { history.pushState(null, '', location.href); } catch {}
+    wake();
+    update();
+    tick = setInterval(update, 200);
+  }
+
+  function update() {
+    const now = Date.now();
+    if (endAt) {
+      const left = Math.max(0, (endAt - now) / 1000);
+      $('time').textContent = fmt(Math.ceil(left));
+      $('timeFill').style.width = (100 * (1 - left / opts.duration)) + '%';
+      if (left <= 0) stop('Time is up.');
+    } else {
+      $('time').textContent = fmt((now - startedAt) / 1000);
+    }
+  }
+
+  function stop(reason) {
+    if (!locked) return;
+    locked = false;
+    clearInterval(tick); clearTimeout(dimTimer); endHold();
+    try { navigator.keyboard && navigator.keyboard.unlock && navigator.keyboard.unlock(); } catch {}
+    try { wakeLock && wakeLock.release(); } catch {}
+    wakeLock = null;
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    const secs = Math.round((Date.now() - startedAt) / 1000);
+    $('resultText').textContent = `All clean. ${reason} Blocked ${blocked} input${blocked === 1 ? '' : 's'} in ${fmt(secs)}.`;
+    $('result').hidden = false;
+    $('lock').hidden = true;
+    $('setup').hidden = false;
+  }
+
+  // Status card fades so the black screen shows smudges, and wakes up on any input.
+  function wake() {
+    $('status').classList.remove('dim');
+    clearTimeout(dimTimer);
+    dimTimer = setTimeout(() => $('status').classList.add('dim'), 2500);
+  }
+
+  function renderCount() { $('counter').textContent = `${blocked} input${blocked === 1 ? '' : 's'} blocked`; }
+  function count() { blocked++; renderCount(); wake(); }
+
+  function ripple(x, y) {
+    const r = document.createElement('div');
+    r.className = 'ripple';
+    r.style.left = x + 'px'; r.style.top = y + 'px';
+    $('lock').appendChild(r);
+    setTimeout(() => r.remove(), 800);
+  }
+
+  // ---------- Hold to unlock (esc key or trackpad press) ----------
+  let holdKind = null;
+  function beginHold(kind) {
+    if (holdStart) return;
+    holdKind = kind; holdStart = Date.now(); wake();
+    const loop = () => {
+      if (!holdStart) return;
+      const p = Math.min(1, (Date.now() - holdStart) / HOLD_MS);
+      $('holdFill').style.width = (p * 100) + '%';
+      $('status').classList.remove('dim');
+      if (p >= 1) return stop('Unlocked early.');
+      holdRaf = requestAnimationFrame(loop);
+    };
+    loop();
+  }
+  function endHold(kind) {
+    if (kind && kind !== holdKind) return;
+    holdStart = 0; holdKind = null;
+    cancelAnimationFrame(holdRaf);
+    $('holdFill').style.width = '0';
+    if (locked) wake();
+  }
+
+  // ---------- Input blocking ----------
+  window.addEventListener('keydown', e => {
+    if (!locked) return;
+    e.preventDefault(); e.stopPropagation();
+    if (e.key === 'Escape' && opts.holdEsc) return beginHold('esc');
+    if (!e.repeat) { count(); ripple(Math.random() * innerWidth, Math.random() * innerHeight); }
+  }, true);
+  window.addEventListener('keyup', e => {
+    if (!locked) return;
+    e.preventDefault();
+    if (e.key === 'Escape') endHold('esc');
+  }, true);
+  window.addEventListener('keypress', e => { if (locked) e.preventDefault(); }, true);
+
+  const swallow = e => { if (!locked) return; e.preventDefault(); e.stopPropagation(); };
+  ['mousedown', 'click', 'dblclick', 'auxclick', 'contextmenu', 'dragstart', 'selectstart',
+   'touchstart', 'touchmove', 'gesturestart', 'gesturechange', 'gestureend']
+    .forEach(t => window.addEventListener(t, swallow, { capture: true, passive: false }));
+
+  window.addEventListener('pointerdown', e => {
+    if (!locked) return;
+    swallow(e); count(); ripple(e.clientX, e.clientY);
+    if (opts.holdPad && e.button === 0) beginHold('pad');
+  }, { capture: true, passive: false });
+  ['pointerup', 'pointercancel', 'mouseup'].forEach(t => window.addEventListener(t, e => {
+    if (!locked) return; swallow(e); endHold('pad');
+  }, { capture: true, passive: false }));
+
+  let lastWheel = 0;
+  window.addEventListener('wheel', e => {
+    if (!locked) return;
+    e.preventDefault();
+    if (Date.now() - lastWheel > 400) { count(); lastWheel = Date.now(); }
+  }, { capture: true, passive: false });
+
+  window.addEventListener('popstate', () => { if (locked) try { history.pushState(null, '', location.href); } catch {} });
+  window.addEventListener('beforeunload', e => { if (locked) { e.preventDefault(); e.returnValue = ''; } });
+  document.addEventListener('fullscreenchange', () => { if (locked && !document.fullscreenElement) { $('warn').hidden = false; wake(); } });
+  document.addEventListener('visibilitychange', async () => {
+    if (locked && opts.awake && document.visibilityState === 'visible') { try { wakeLock = await navigator.wakeLock.request('screen'); } catch {} }
+  });
+
+  $('startBtn').addEventListener('click', start);
+})();
+</script>
+</body>
+</html>
