@@ -35,7 +35,8 @@ The operating system handles some keys before any browser sees them.
 
 ## Files
 
-- `public/index.html`: the whole app, plus the cleaning guide and FAQ
+- `public/index.html`: the page, cleaning guide and FAQ
+- `public/app.js`: the lock logic
 - `public/og.png`, `public/favicon.svg`: share image and icon
 - `public/sitemap.xml`, `public/robots.txt`: for search engines
 - `public/llms.txt`: a plain summary for AI assistants
