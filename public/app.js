@@ -43,7 +43,7 @@
         ? ['yes', 'Full screen', 'Running from your Home Screen, so there is no address bar.']
         : canFullscreen
           ? ['yes', 'Full screen', 'Hides the address bar and browser buttons while you clean.']
-          : ['setup', 'Full screen', `Safari on ${osNames.ios} only allows full screen for videos. For a full black screen with no address bar, tap Share → Add to Home Screen and open Clean Mode from there.`],
+          : ['setup', 'Full screen', `Every ${osNames.ios} browser, Safari and Chrome included, only allows full screen for videos. For a full black screen with no address bar, add Clean Mode to your Home Screen (Share → Add to Home Screen) and open it from there.`],
       ios
         ? ['setup', 'Lock the whole screen, edges included', 'Turn on Guided Access in Settings → Accessibility → Guided Access. Then triple-click the side (or Home) button while Clean Mode is open. Triple-click again to end it.']
         : ['setup', 'Stop swipes leaving the page', 'Turn on app pinning in Settings → Security (or Security & privacy) → More settings → App pinning, then pin your browser from the recent apps screen.'],
@@ -322,6 +322,10 @@
 
   // iPhone Safari can't go full screen, so suggest adding Clean Mode to the Home Screen.
   if ($('installTip')) $('installTip').hidden = !(os === 'ios' && !canFullscreen && !isHomeScreenApp);
+  // Chrome on iPhone puts Share in the address bar; Safari puts it in the toolbar.
+  if ($('installSteps') && browser === 'Chrome' && os === 'ios') {
+    $('installSteps').innerHTML = 'tap the <b>Share</b> button in Chrome\'s address bar → <b>Add to Home Screen</b>';
+  }
   document.addEventListener('visibilitychange', async () => {
     if (locked && opts.awake && document.visibilityState === 'visible') { try { wakeLock = await navigator.wakeLock.request('screen'); } catch {} }
   });
