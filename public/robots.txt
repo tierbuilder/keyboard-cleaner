@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://keyboard-cleaner.pages.dev/sitemap.xml
+Sitemap: https://keycleaner.gumber.ai/sitemap.xml

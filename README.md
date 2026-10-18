@@ -1,6 +1,6 @@
 # Clean Mode – Keyboard Cleaner for Mac & Windows
 
-**Live:** https://keyboard-cleaner.pages.dev/
+**Live:** https://keycleaner.gumber.ai/
 
 A web page that locks your keyboard and trackpad or touchpad on a timer so you can wipe them clean without typing, clicking or swiping anything. Works on Mac and Windows.
 

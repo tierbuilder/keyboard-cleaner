@@ -2,7 +2,7 @@
 
 > Clean Mode is a free keyboard cleaner web app for Mac and Windows. It locks the keyboard and trackpad in the browser so people can wipe them clean without typing, clicking or swiping anything. Nothing is installed and nothing is uploaded.
 
-URL: https://keyboard-cleaner.pages.dev/
+URL: https://keycleaner.gumber.ai/
 Made by: tierbuilder (https://github.com/tierbuilder)
 Price: free
 Works in: Chrome, Edge and Arc (best); Safari and Firefox (cannot block system shortcuts)
