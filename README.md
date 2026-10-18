@@ -1,4 +1,6 @@
-# Clean Mode
+# Clean Mode – Keyboard Cleaner for Mac & Windows
+
+**Live:** https://keyboard-cleaner.pages.dev/
 
 A web page that locks your keyboard and trackpad or touchpad on a timer so you can wipe them clean without typing, clicking or swiping anything. Works on Mac and Windows.
 
@@ -31,12 +33,27 @@ The operating system handles some keys before any browser sees them.
 - **Ctrl + Alt + Del**, the **Fn** key and the **power button.** Wipe these gently or last.
 - **Three- and four-finger touchpad swipes.** Set them to *Nothing* in *Settings → Bluetooth & devices → Touchpad* while you clean.
 
-## Run it yourself
+## Files
 
-It's a single `index.html` with no build step. Open it directly, or serve it:
+- `public/index.html`: the whole app, plus the cleaning guide and FAQ
+- `public/og.png`, `public/favicon.svg`: share image and icon
+- `public/sitemap.xml`, `public/robots.txt`: for search engines
+- `public/llms.txt`: a plain summary for AI assistants
+- `public/_headers`: security and caching headers for Cloudflare
+- `wrangler.toml`: Cloudflare Pages settings
+
+## Deploy to Cloudflare Pages
 
 ```bash
-python3 -m http.server 8765
+npx wrangler@3 pages deploy
+```
+
+The first time, sign in with `npx wrangler@3 login`.
+
+## Run it locally
+
+```bash
+python3 -m http.server 8765 --directory public
 ```
 
 ## License

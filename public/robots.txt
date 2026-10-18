@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://keyboard-cleaner.pages.dev/sitemap.xml

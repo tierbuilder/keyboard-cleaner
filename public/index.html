@@ -3,8 +3,81 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Lock your Mac or Windows keyboard and trackpad so you can wipe them clean. The screen goes black so smudges show up.">
-<title>Clean Mode</title>
+<title>Keyboard Cleaner – Lock Your Keyboard &amp; Trackpad to Clean | Clean Mode</title>
+<meta name="description" content="Free keyboard cleaner for Mac and Windows. Lock your keyboard and trackpad in one click, wipe them clean, and unlock with a timer. Nothing to install.">
+<link rel="canonical" href="https://keyboard-cleaner.pages.dev/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="tierbuilder">
+<meta name="theme-color" content="#0f8f86">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="og.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Clean Mode">
+<meta property="og:title" content="Clean Mode – Free keyboard cleaner for Mac and Windows">
+<meta property="og:description" content="Lock your keyboard and trackpad in one click so you can wipe them clean. Works in your browser. Nothing to install.">
+<meta property="og:url" content="https://keyboard-cleaner.pages.dev/">
+<meta property="og:image" content="https://keyboard-cleaner.pages.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Clean Mode: lock your keyboard and trackpad to clean them">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Clean Mode – Free keyboard cleaner for Mac and Windows">
+<meta name="twitter:description" content="Lock your keyboard and trackpad in one click so you can wipe them clean. Nothing to install.">
+<meta name="twitter:image" content="https://keyboard-cleaner.pages.dev/og.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://keyboard-cleaner.pages.dev/#app",
+      "name": "Clean Mode",
+      "alternateName": ["Keyboard Cleaner", "Keyboard lock for cleaning"],
+      "url": "https://keyboard-cleaner.pages.dev/",
+      "description": "A free web app that locks your keyboard and trackpad so you can clean them without typing, clicking or swiping anything. Unlocks on a timer or when you hold esc or the trackpad for 3 seconds.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "macOS, Windows",
+      "browserRequirements": "Works best in Google Chrome, Microsoft Edge or Arc",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Blocks key presses, clicks, scrolling, pinch-zoom and swipe-back",
+        "Black screen that shows smudges on the display",
+        "Timer from 30 seconds to 5 minutes, or no limit",
+        "Unlock by holding esc or the trackpad for 3 seconds",
+        "Keeps the display awake while you clean",
+        "Detects Mac or Windows and lists what it can and can't block"
+      ],
+      "author": { "@type": "Person", "name": "tierbuilder", "url": "https://github.com/tierbuilder" }
+    },
+    {
+      "@type": "HowTo",
+      "name": "How to lock your keyboard and trackpad to clean them",
+      "totalTime": "PT2M",
+      "step": [
+        { "@type": "HowToStep", "name": "Open Clean Mode", "text": "Open Clean Mode in Chrome, Edge or Arc on your Mac or Windows computer." },
+        { "@type": "HowToStep", "name": "Pick a timer", "text": "Choose how long to lock: 30 seconds, 1, 2 or 5 minutes, or no limit." },
+        { "@type": "HowToStep", "name": "Start Cleaning Mode", "text": "Click Start Cleaning Mode. The screen goes black and the keyboard and trackpad are locked." },
+        { "@type": "HowToStep", "name": "Wipe the keyboard and trackpad", "text": "Wipe the keys and trackpad with a soft, slightly damp microfiber cloth." },
+        { "@type": "HowToStep", "name": "Unlock", "text": "Wait for the timer, or hold esc or press and hold the trackpad for 3 seconds." }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I lock my keyboard to clean it?", "acceptedAnswer": { "@type": "Answer", "text": "Open Clean Mode in your browser and click Start Cleaning Mode. Your keyboard and trackpad are locked until the timer ends, or until you hold esc or the trackpad for 3 seconds." } },
+        { "@type": "Question", "name": "Do I need to install anything?", "acceptedAnswer": { "@type": "Answer", "text": "No. Clean Mode runs entirely in your browser. Nothing is installed, and nothing you type or click is uploaded." } },
+        { "@type": "Question", "name": "Why do the volume and brightness keys still work?", "acceptedAnswer": { "@type": "Answer", "text": "macOS and Windows handle these keys before any browser sees them. On a Mac, turn on Use F1, F2, etc. keys as standard function keys in Keyboard settings. On Windows, turn on Fn Lock. Clean Mode then blocks them." } },
+        { "@type": "Question", "name": "Does it work on Mac and Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Clean Mode works on Mac and Windows in Chrome, Edge and Arc. Safari and Firefox work too, but can't block system shortcuts like Command-Tab." } },
+        { "@type": "Question", "name": "Can I clean my keyboard without turning off my computer?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Clean Mode locks the keyboard and trackpad while your computer stays on, so nothing happens when you wipe the keys." } },
+        { "@type": "Question", "name": "How do I unlock Clean Mode?", "acceptedAnswer": { "@type": "Answer", "text": "It unlocks on its own when the timer ends. To unlock early, hold esc or press and hold the trackpad for 3 seconds." } }
+      ]
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
@@ -60,7 +133,25 @@
   }
 
   /* App window */
-  .stage { min-height: 100%; display: flex; align-items: center; justify-content: center; padding: 40px 16px; }
+  .stage { min-height: 92vh; display: flex; align-items: center; justify-content: center; padding: 40px 16px; }
+  .h1-sub { display: block; font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin-top: 2px; }
+
+  /* Guide below the tool */
+  .guide { max-width: 720px; margin: 0 auto; padding: 8px 16px 48px; display: flex; flex-direction: column; gap: 36px; -webkit-user-select: text; user-select: text; }
+  .guide h2 { font-size: 22px; margin: 0 0 10px; text-wrap: balance; letter-spacing: -.01em; }
+  .guide p, .guide li { color: var(--fg); font-size: 15.5px; line-height: 1.65; }
+  .guide p { margin: 0 0 12px; max-width: 65ch; }
+  .guide ul, .guide ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--window); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 520px; }
+  th, td { text-align: left; padding: 10px 14px; border-top: 1px solid var(--line); vertical-align: top; }
+  thead th { border-top: 0; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  details { border-top: 1px solid var(--line); padding: 12px 0; }
+  details:last-child { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; font-weight: 600; font-size: 15.5px; }
+  details p { margin: 8px 0 0; color: var(--muted); }
+  .site-foot { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .site-foot a, .guide a { color: var(--accent); }
   .window {
     width: 100%; max-width: 520px; background: var(--window); backdrop-filter: blur(20px);
     border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow);
@@ -167,7 +258,8 @@
 <body>
 <div id="app">
 
-  <main class="stage" id="setup">
+  <div id="setup">
+  <main class="stage">
     <div class="window">
       <div class="head">
         <div class="icon" aria-hidden="true">
@@ -178,7 +270,7 @@
           </svg>
         </div>
         <div>
-          <h1>Clean Mode</h1>
+          <h1>Clean Mode <span class="h1-sub">Keyboard cleaner for Mac &amp; Windows</span></h1>
           <p>Locks your keyboard and trackpad so you can wipe them down without typing, clicking or swiping anything.</p>
         </div>
       </div>
@@ -238,6 +330,73 @@
       <div class="foot"><span>Works on Mac and Windows · Best in Chrome or Edge</span><span>Nothing is installed or uploaded</span></div>
     </div>
   </main>
+
+  <article class="guide">
+    <section>
+      <h2>Lock your keyboard and trackpad to clean them</h2>
+      <p>Clean Mode is a free keyboard cleaner that runs in your browser. It locks your keyboard and trackpad so you can wipe away dust, crumbs and fingerprints without typing, clicking or swiping anything. There's nothing to install and no need to turn off your computer.</p>
+      <ol class="howto">
+        <li><b>Pick a timer.</b> 30 seconds, 1, 2 or 5 minutes, or no limit.</li>
+        <li><b>Click Start Cleaning Mode.</b> The screen turns black, which also makes smudges on the display easy to spot.</li>
+        <li><b>Wipe everything.</b> Keys, trackpad and screen. Every key press, click and swipe is blocked.</li>
+        <li><b>Unlock.</b> Wait for the timer, or hold <kbd>esc</kbd> or press and hold the trackpad for 3 seconds.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>What Clean Mode blocks</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Input</th><th>Mac</th><th>Windows</th></tr></thead>
+          <tbody>
+            <tr><td>Letters, numbers, arrows, space, enter</td><td>Blocked</td><td>Blocked</td></tr>
+            <tr><td>Trackpad or touchpad clicks, scrolling, pinch</td><td>Blocked</td><td>Blocked</td></tr>
+            <tr><td>System shortcuts</td><td>⌘ shortcuts blocked in Chrome, Edge, Arc</td><td>Win key and Alt+Tab blocked in Chrome, Edge</td></tr>
+            <tr><td>Volume, brightness, media keys</td><td>Blocked after turning on standard function keys</td><td>Blocked after turning on Fn Lock</td></tr>
+            <tr><td>Three- and four-finger swipes</td><td>Turn off in Trackpad settings</td><td>Set to “Nothing” in Touchpad settings</td></tr>
+            <tr><td>Always handled by the system</td><td>fn (🌐), Touch ID / power</td><td>Ctrl+Alt+Del, Fn, power</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>How to clean a MacBook keyboard and trackpad</h2>
+      <ul>
+        <li>Start Clean Mode so nothing you touch triggers an action.</li>
+        <li>Use a soft, lint-free microfiber cloth, slightly damp with water. Never spray liquid directly onto the keyboard.</li>
+        <li>For germs, Apple says you can gently wipe the keyboard and trackpad with a 70% isopropyl alcohol wipe. Avoid bleach and getting moisture into openings.</li>
+        <li>Blow crumbs out from between keys with compressed air, holding the laptop at an angle.</li>
+        <li>Wipe the trackpad last, then the screen while it's still black so smudges stand out.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>How to clean a Windows laptop keyboard</h2>
+      <ul>
+        <li>Turn on Fn Lock (often <kbd>Fn</kbd> + <kbd>Esc</kbd>) so the top row sends F-keys that Clean Mode can block.</li>
+        <li>Start Clean Mode in Chrome or Edge so the Windows key and Alt+Tab are blocked too.</li>
+        <li>Wipe the keys and touchpad with a slightly damp microfiber cloth, and use compressed air between keys.</li>
+        <li>Leave Ctrl+Alt+Del and the power button for last, since no app can block them.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Frequently asked questions</h2>
+      <details><summary>How do I lock my keyboard to clean it?</summary><p>Open Clean Mode in your browser and click Start Cleaning Mode. Your keyboard and trackpad are locked until the timer ends, or until you hold esc or the trackpad for 3 seconds.</p></details>
+      <details><summary>Do I need to install anything?</summary><p>No. Clean Mode runs entirely in your browser. Nothing is installed, and nothing you type or click is uploaded.</p></details>
+      <details><summary>Why do the volume and brightness keys still work?</summary><p>macOS and Windows handle these keys before any browser sees them. On a Mac, turn on “Use F1, F2, etc. keys as standard function keys” in Keyboard settings. On Windows, turn on Fn Lock. Clean Mode then blocks them.</p></details>
+      <details><summary>Does it work on Mac and Windows?</summary><p>Yes. Clean Mode works on Mac and Windows in Chrome, Edge and Arc. Safari and Firefox work too, but can't block system shortcuts like ⌘Tab.</p></details>
+      <details><summary>Can I clean my keyboard without turning off my computer?</summary><p>Yes. Clean Mode locks the keyboard and trackpad while your computer stays on, so nothing happens when you wipe the keys.</p></details>
+      <details><summary>How do I unlock Clean Mode?</summary><p>It unlocks on its own when the timer ends. To unlock early, hold esc or press and hold the trackpad for 3 seconds.</p></details>
+    </section>
+
+    <footer class="site-foot">
+      <span>Clean Mode by <a href="https://github.com/tierbuilder">tierbuilder</a></span>
+      <a href="https://github.com/tierbuilder/keybordlock">Open source on GitHub</a>
+    </footer>
+  </article>
+  </div>
 
   <section id="lock" hidden>
     <div class="status" id="status">
