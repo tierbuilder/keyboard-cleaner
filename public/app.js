@@ -75,7 +75,7 @@
     $('detected').innerHTML = detectedOS === os
       ? `Detected: <b>${name}</b> with <b>${browser}</b>`
       : `Showing: <b>${name}</b>`;
-    $('osSelect').value = os;
+    if ($('osSelect')) $('osSelect').value = os;
     const icon = { yes: '✓', setup: '!', no: '✕' };
     const label = { yes: 'Blocked', setup: 'Needs a setting', no: 'Not blocked' };
     $('checklist').innerHTML = checklist().map(([k, what, why]) =>
@@ -128,7 +128,7 @@
   }
 
   $('durations').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { opts.duration = +b.dataset.s; renderOptions(); } });
-  $('osSelect').addEventListener('change', e => { if (osNames[e.target.value]) { os = e.target.value; renderOptions(); } });
+  if ($('osSelect')) $('osSelect').addEventListener('change', e => { if (osNames[e.target.value]) { os = e.target.value; renderOptions(); } });
   document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { opts.tab = b.id.slice(4); renderOptions(); } });
   $('optDark').addEventListener('change', e => { opts.dark = e.target.checked; renderOptions(); });
   $('optAwake').addEventListener('change', e => { opts.awake = e.target.checked; renderOptions(); });

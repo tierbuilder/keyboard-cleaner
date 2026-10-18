@@ -8,10 +8,13 @@
   Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 /
-  Cache-Control: public, max-age=300
+  Cache-Control: no-cache
+
+/index.html
+  Cache-Control: no-cache
 
 /app.js
-  Cache-Control: public, max-age=300
+  Cache-Control: no-cache
 
 /og.png
   Cache-Control: public, max-age=86400
