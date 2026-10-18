@@ -1,8 +1,8 @@
-# Clean Mode – Keyboard Cleaner for Mac & Windows
+# Clean Mode – Keyboard & Screen Cleaner
 
 **Live:** https://keycleaner.gumber.ai/
 
-A web page that locks your keyboard and trackpad or touchpad on a timer so you can wipe them clean without typing, clicking or swiping anything. Works on Mac and Windows.
+A web page that locks your keyboard, trackpad or touchscreen on a timer so you can wipe it clean without typing, clicking, tapping or swiping anything. Works on Mac, Windows, iPhone, iPad and Android.
 
 ## How to use
 
@@ -19,6 +19,14 @@ A web page that locks your keyboard and trackpad or touchpad on a timer so you c
 - **What's blocked:** detects whether you're on a Mac or Windows PC and which browser you use, then lists what Clean Mode blocks, what needs a quick setting, and what can't be blocked.
 
 Your options are remembered in your browser. Nothing is installed or uploaded.
+
+## Phones and tablets
+
+Open the page in any browser on iPhone, iPad or Android and tap **Start Cleaning Mode**. The screen turns black and taps and swipes are ignored. To unlock early, hold a finger still on the status card for 3 seconds; moving or touching in several places (like a cloth) cancels it.
+
+- **iPhone / iPad:** turn on Guided Access to also block edge swipes and the Home gesture. Add Clean Mode to the Home Screen for a full black screen on iPhone.
+- **Android:** turn on app pinning to stop edge swipes leaving the page.
+- Hardware buttons are always handled by the phone.
 
 ## What a web page can't block
 
@@ -37,7 +45,8 @@ The operating system handles some keys before any browser sees them.
 
 - `public/index.html`: the page, cleaning guide and FAQ
 - `public/app.js`: the lock logic
-- `public/og.png`, `public/favicon.svg`: share image and icon
+- `public/og.png`, `public/favicon.svg`, `public/icon-*.png`: share image and icons
+- `public/manifest.webmanifest`: lets phones add Clean Mode to the home screen
 - `public/sitemap.xml`, `public/robots.txt`: for search engines
 - `public/llms.txt`: a plain summary for AI assistants
 - `public/_headers`: security and caching headers for Cloudflare

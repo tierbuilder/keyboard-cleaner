@@ -3,27 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Keyboard Cleaner – Lock Your Keyboard &amp; Trackpad to Clean | Clean Mode</title>
-<meta name="description" content="Free keyboard cleaner for Mac and Windows. Lock your keyboard and trackpad in one click, wipe them clean, and unlock with a timer. Nothing to install.">
+<title>Keyboard &amp; Screen Cleaner – Lock Your Device to Clean | Clean Mode</title>
+<meta name="description" content="Free keyboard and screen cleaner for Mac, Windows, iPhone, iPad and Android. Lock your keyboard, trackpad or touchscreen in one tap and wipe it clean.">
 <link rel="canonical" href="https://keycleaner.gumber.ai/">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="tierbuilder">
 <meta name="theme-color" content="#0f8f86">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="og.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clean Mode">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Clean Mode">
-<meta property="og:title" content="Clean Mode – Free keyboard cleaner for Mac and Windows">
-<meta property="og:description" content="Lock your keyboard and trackpad in one click so you can wipe them clean. Works in your browser. Nothing to install.">
+<meta property="og:title" content="Clean Mode – Free keyboard and screen cleaner">
+<meta property="og:description" content="Lock your keyboard, trackpad or phone screen in one tap so you can wipe it clean. Mac, Windows, iPhone and Android. Nothing to install.">
 <meta property="og:url" content="https://keycleaner.gumber.ai/">
 <meta property="og:image" content="https://keycleaner.gumber.ai/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Clean Mode: lock your keyboard and trackpad to clean them">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Clean Mode – Free keyboard cleaner for Mac and Windows">
-<meta name="twitter:description" content="Lock your keyboard and trackpad in one click so you can wipe them clean. Nothing to install.">
+<meta name="twitter:title" content="Clean Mode – Free keyboard and screen cleaner">
+<meta name="twitter:description" content="Lock your keyboard, trackpad or phone screen in one tap so you can wipe it clean. Nothing to install.">
 <meta name="twitter:image" content="https://keycleaner.gumber.ai/og.png">
 
 <script type="application/ld+json">
@@ -34,12 +39,12 @@
       "@type": "WebApplication",
       "@id": "https://keycleaner.gumber.ai/#app",
       "name": "Clean Mode",
-      "alternateName": ["Keyboard Cleaner", "Keyboard lock for cleaning"],
+      "alternateName": ["Keyboard Cleaner", "Screen Cleaner", "Keyboard lock for cleaning", "Touch lock for cleaning"],
       "url": "https://keycleaner.gumber.ai/",
       "description": "A free web app that locks your keyboard and trackpad so you can clean them without typing, clicking or swiping anything. Unlocks on a timer or when you hold esc or the trackpad for 3 seconds.",
       "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "macOS, Windows",
-      "browserRequirements": "Works best in Google Chrome, Microsoft Edge or Arc",
+      "operatingSystem": "macOS, Windows, iOS, iPadOS, Android",
+      "browserRequirements": "Any modern browser. Works best in Google Chrome, Microsoft Edge, Arc or Safari on iPhone and iPad",
       "isAccessibleForFree": true,
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "featureList": [
@@ -48,7 +53,8 @@
         "Timer from 30 seconds to 5 minutes, or no limit",
         "Unlock by holding esc or the trackpad for 3 seconds",
         "Keeps the display awake while you clean",
-        "Detects Mac or Windows and lists what it can and can't block"
+        "Locks the touchscreen on iPhone, iPad and Android phones and tablets so you can wipe the screen",
+        "Detects Mac, Windows, iPhone, iPad or Android and lists what it can and can't block"
       ],
       "author": { "@type": "Person", "name": "tierbuilder", "url": "https://github.com/tierbuilder" }
     },
@@ -72,7 +78,8 @@
         { "@type": "Question", "name": "Why do the volume and brightness keys still work?", "acceptedAnswer": { "@type": "Answer", "text": "macOS and Windows handle these keys before any browser sees them. On a Mac, turn on Use F1, F2, etc. keys as standard function keys in Keyboard settings. On Windows, turn on Fn Lock. Clean Mode then blocks them." } },
         { "@type": "Question", "name": "Does it work on Mac and Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Clean Mode works on Mac and Windows in Chrome, Edge and Arc. Safari and Firefox work too, but can't block system shortcuts like Command-Tab." } },
         { "@type": "Question", "name": "Can I clean my keyboard without turning off my computer?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Clean Mode locks the keyboard and trackpad while your computer stays on, so nothing happens when you wipe the keys." } },
-        { "@type": "Question", "name": "How do I unlock Clean Mode?", "acceptedAnswer": { "@type": "Answer", "text": "It unlocks on its own when the timer ends. To unlock early, hold esc or press and hold the trackpad for 3 seconds." } }
+        { "@type": "Question", "name": "Does it work on iPhone, iPad and Android?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Open Clean Mode in your phone or tablet browser and tap Start Cleaning Mode. The screen turns black and ignores touches, so you can wipe away fingerprints. To unlock, hold a finger still on the status card for 3 seconds. Swipes from the screen edges and the hardware buttons are handled by the phone itself; use Guided Access on iPhone or app pinning on Android to block those too." } },
+        { "@type": "Question", "name": "How do I unlock Clean Mode?", "acceptedAnswer": { "@type": "Answer", "text": "It unlocks on its own when the timer ends. To unlock early on a computer, hold esc or press and hold the trackpad for 3 seconds. On a phone or tablet, hold a finger still on the status card for 3 seconds." } }
       ]
     }
   ]
@@ -200,6 +207,9 @@
     color: var(--fg); font-size: 14px; font-weight: 500; cursor: pointer;
   }
   .seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  #app[data-input="touch"] .pointer-only, #app[data-input="pointer"] .touch-only { display: none; }
+  .os-pick { color: var(--muted); font-size: 13px; display: inline-flex; gap: 6px; align-items: center; }
+  .os-pick select { font: inherit; color: var(--fg); background: var(--window); border: 1px solid var(--line); border-radius: 7px; padding: 2px 6px; }
   .detect { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; font-size: 13.5px; }
   .detect b { font-weight: 600; }
   .link { border: 0; padding: 0; background: none; color: var(--accent); font-size: 13px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
@@ -270,8 +280,8 @@
           </svg>
         </div>
         <div>
-          <h1>Clean Mode <span class="h1-sub">Keyboard cleaner for Mac &amp; Windows</span></h1>
-          <p>Locks your keyboard and trackpad so you can wipe them down without typing, clicking or swiping anything.</p>
+          <h1>Clean Mode <span class="h1-sub">Keyboard &amp; screen cleaner</span></h1>
+          <p><span class="pointer-only">Locks your keyboard and trackpad so you can wipe them down without typing, clicking or swiping anything.</span><span class="touch-only">Locks your screen so you can wipe away fingerprints without tapping or swiping anything.</span></p>
         </div>
       </div>
 
@@ -312,22 +322,29 @@
         </div>
 
         <div class="panel" id="p-unlock" role="tabpanel" hidden>
-          <label class="check"><input type="checkbox" id="optHoldPad" checked><span>Press and hold the trackpad for 3 seconds<small>Hold one click down. Normal wiping won't trigger it.</small></span></label>
-          <label class="check"><input type="checkbox" id="optHoldEsc" checked><span>Hold <kbd>esc</kbd> for 3 seconds</span></label>
+          <label class="check"><input type="checkbox" id="optHoldPad" checked><span class="pointer-only">Press and hold the trackpad for 3 seconds<small>Hold one click down without moving. Normal wiping won't trigger it.</small></span><span class="touch-only">Hold a finger still on the status card for 3 seconds<small>Moving, or touching in more than one place, cancels it, so wiping won't trigger it.</small></span></label>
+          <label class="check pointer-only"><input type="checkbox" id="optHoldEsc" checked><span>Hold <kbd>esc</kbd> for 3 seconds</span></label>
           <p class="note" id="unlockNote">At least one unlock method stays on when there's no time limit.</p>
         </div>
 
         <div class="panel" id="p-tips" role="tabpanel" hidden>
           <div class="detect">
             <span id="detected">Checking your computer…</span>
-            <button class="link" id="osSwitch"></button>
+            <label class="os-pick">Not right?
+              <select id="osSelect">
+                <option value="mac">Mac</option>
+                <option value="win">Windows</option>
+                <option value="ios">iPhone / iPad</option>
+                <option value="android">Android</option>
+              </select>
+            </label>
           </div>
           <ul class="checklist" id="checklist"></ul>
           <p class="note">Use a soft, slightly damp microfiber cloth. Never spray liquid on the keyboard directly.</p>
         </div>
       </section>
 
-      <div class="foot"><span>Works on Mac and Windows · Best in Chrome or Edge</span><span>Nothing is installed or uploaded</span></div>
+      <div class="foot"><span>Works on Mac, Windows, iPhone, iPad and Android</span><span>Nothing is installed or uploaded</span></div>
     </div>
   </main>
 
@@ -382,13 +399,25 @@
     </section>
 
     <section>
+      <h2>How to clean your phone or tablet screen</h2>
+      <p>Clean Mode works on iPhone, iPad and Android too. Open this page in your phone's browser and tap Start Cleaning Mode. The screen turns black, which makes fingerprints and smudges easy to see, and taps and swipes on the page are ignored while you wipe.</p>
+      <ul>
+        <li><b>Unlock:</b> hold a finger still on the status card for 3 seconds. Moving, or touching in several places at once like a cloth does, cancels it.</li>
+        <li><b>iPhone and iPad:</b> for a lock that also covers the screen edges and Home swipe, turn on Guided Access (Settings → Accessibility → Guided Access) and triple-click the side or Home button while Clean Mode is open. For a full black screen on iPhone, add Clean Mode to your Home Screen.</li>
+        <li><b>Android:</b> turn on app pinning (Settings → Security → More settings → App pinning) to stop edge swipes from leaving the page.</li>
+        <li>Wipe with a soft, dry or slightly damp microfiber cloth. Avoid paper towels and harsh cleaners that can damage the screen's coating.</li>
+      </ul>
+    </section>
+
+    <section>
       <h2>Frequently asked questions</h2>
       <details><summary>How do I lock my keyboard to clean it?</summary><p>Open Clean Mode in your browser and click Start Cleaning Mode. Your keyboard and trackpad are locked until the timer ends, or until you hold esc or the trackpad for 3 seconds.</p></details>
       <details><summary>Do I need to install anything?</summary><p>No. Clean Mode runs entirely in your browser. Nothing is installed, and nothing you type or click is uploaded.</p></details>
       <details><summary>Why do the volume and brightness keys still work?</summary><p>macOS and Windows handle these keys before any browser sees them. On a Mac, turn on “Use F1, F2, etc. keys as standard function keys” in Keyboard settings. On Windows, turn on Fn Lock. Clean Mode then blocks them.</p></details>
       <details><summary>Does it work on Mac and Windows?</summary><p>Yes. Clean Mode works on Mac and Windows in Chrome, Edge and Arc. Safari and Firefox work too, but can't block system shortcuts like ⌘Tab.</p></details>
       <details><summary>Can I clean my keyboard without turning off my computer?</summary><p>Yes. Clean Mode locks the keyboard and trackpad while your computer stays on, so nothing happens when you wipe the keys.</p></details>
-      <details><summary>How do I unlock Clean Mode?</summary><p>It unlocks on its own when the timer ends. To unlock early, hold esc or press and hold the trackpad for 3 seconds.</p></details>
+      <details><summary>Does it work on iPhone, iPad and Android?</summary><p>Yes. Open Clean Mode in your phone or tablet browser and tap Start Cleaning Mode. The screen turns black and ignores touches, so you can wipe away fingerprints. To unlock, hold a finger still on the status card for 3 seconds. Swipes from the screen edges and the hardware buttons are handled by the phone itself; use Guided Access on iPhone or app pinning on Android to block those too.</p></details>
+      <details><summary>How do I unlock Clean Mode?</summary><p>It unlocks on its own when the timer ends. To unlock early on a computer, hold esc or press and hold the trackpad for 3 seconds. On a phone or tablet, hold a finger still on the status card for 3 seconds.</p></details>
     </section>
 
     <footer class="site-foot">

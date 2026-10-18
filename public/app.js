@@ -14,16 +14,42 @@
   } catch {}
   const save = () => { try { localStorage.setItem('cleanmode-opts', JSON.stringify(opts)); } catch {} };
 
-  // ---------- Detect the computer and browser ----------
-  const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || navigator.userAgent;
-  const detectedOS = /win/i.test(platform) ? 'win' : /mac/i.test(platform) ? 'mac' : null;
-  let os = detectedOS || 'mac';
+  // ---------- Detect the device and browser ----------
   const ua = navigator.userAgent;
-  const browser = /Edg\//.test(ua) ? 'Edge' : /Firefox\//.test(ua) ? 'Firefox'
-    : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'your browser';
+  const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || ua;
+  const iPadOS = /mac/i.test(platform) && navigator.maxTouchPoints > 1; // iPads report themselves as Macs
+  const detectedOS = /android/i.test(ua) ? 'android'
+    : (/iphone|ipad|ipod/i.test(ua) || iPadOS) ? 'ios'
+    : /win/i.test(platform) ? 'win' : /mac/i.test(platform) ? 'mac' : null;
+  let os = detectedOS || 'mac';
+  const browser = /EdgA?\/|EdgiOS\//.test(ua) ? 'Edge' : /SamsungBrowser\//.test(ua) ? 'Samsung Internet'
+    : /Firefox\/|FxiOS\//.test(ua) ? 'Firefox' : /Chrome\/|CriOS\//.test(ua) ? 'Chrome'
+    : /Safari\//.test(ua) ? 'Safari' : 'your browser';
   const canLockKeys = !!(navigator.keyboard && navigator.keyboard.lock);
+  const canFullscreen = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+  const isTouch = () => os === 'ios' || os === 'android';
+  const osNames = { mac: 'Mac', win: 'Windows PC', ios: /ipad/i.test(ua) || iPadOS ? 'iPad' : 'iPhone', android: 'Android device' };
+
+  function mobileChecklist() {
+    const ios = os === 'ios';
+    return [
+      ['yes', 'Taps, swipes, scrolling and pinch-zoom on the page', 'Blocked.'],
+      ['yes', 'Black screen', 'Shows fingerprints and smudges so you can wipe them away.'],
+      canFullscreen
+        ? ['yes', 'Full screen', `Hides the browser bars while you clean.`]
+        : ['setup', 'Full screen', `${osNames.ios} browsers can't hide the address bar. For a full black screen, tap Share → Add to Home Screen and open Clean Mode from there.`],
+      ios
+        ? ['setup', 'Lock the whole screen, edges included', 'Turn on Guided Access in Settings → Accessibility → Guided Access. Then triple-click the side (or Home) button while Clean Mode is open. Triple-click again to end it.']
+        : ['setup', 'Stop swipes leaving the page', 'Turn on app pinning in Settings → Security (or Security & privacy) → More settings → App pinning, then pin your browser from the recent apps screen.'],
+      ios
+        ? ['no', 'Swipe up for Home, Control Center and Notification Center', 'iOS handles swipes from the screen edges. Avoid the edges, or use Guided Access.']
+        : ['no', 'Back gesture, Home swipe and notification shade', 'Android handles swipes from the screen edges. Avoid the edges, or use app pinning.'],
+      ['no', ios ? 'Side, volume and Home buttons' : 'Power and volume buttons', `${ios ? 'iOS' : 'Android'} handles these itself.`],
+    ];
+  }
 
   function checklist() {
+    if (isTouch()) return mobileChecklist();
     const mac = os === 'mac';
     const mod = mac ? '⌘ shortcuts (⌘W, ⌘Q, ⌘Tab)' : 'Windows key, Alt+Tab, Ctrl+W';
     return [
@@ -45,11 +71,11 @@
   }
 
   function renderChecklist() {
-    const name = os === 'mac' ? 'Mac' : 'Windows PC';
+    const name = osNames[os];
     $('detected').innerHTML = detectedOS === os
       ? `Detected: <b>${name}</b> with <b>${browser}</b>`
       : `Showing: <b>${name}</b>`;
-    $('osSwitch').textContent = os === 'mac' ? 'Using Windows?' : 'Using a Mac?';
+    $('osSelect').value = os;
     const icon = { yes: '✓', setup: '!', no: '✕' };
     const label = { yes: 'Blocked', setup: 'Needs a setting', no: 'Not blocked' };
     $('checklist').innerHTML = checklist().map(([k, what, why]) =>
@@ -64,11 +90,14 @@
     document.querySelectorAll('#durations button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.s === opts.duration));
     $('optDark').checked = opts.dark;
     $('optAwake').checked = opts.awake;
-    // With no time limit, one unlock method must stay on.
-    if (opts.duration === 0 && !opts.holdPad && !opts.holdEsc) opts.holdEsc = true;
+    // With no time limit, one unlock method must stay on. Touchscreens have no esc key.
+    if (opts.duration === 0 && !opts.holdPad && (!opts.holdEsc || isTouch())) {
+      if (isTouch()) opts.holdPad = true; else opts.holdEsc = true;
+    }
     $('optHoldPad').checked = opts.holdPad;
     $('optHoldEsc').checked = opts.holdEsc;
     app.dataset.os = os;
+    app.dataset.input = isTouch() ? 'touch' : 'pointer';
     renderChecklist();
     document.querySelectorAll('.tabs button').forEach(b => {
       const on = b.id === 'tab-' + opts.tab;
@@ -82,6 +111,7 @@
 
   function unlockPhrase() {
     const ways = [];
+    if (isTouch()) return opts.holdPad ? 'press and hold the status card for 3 seconds' : '';
     if (opts.holdEsc) ways.push('hold esc');
     if (opts.holdPad) ways.push('press and hold the trackpad');
     return ways.length ? ways.join(' or ') + ' for 3 seconds' : '';
@@ -98,7 +128,7 @@
   }
 
   $('durations').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { opts.duration = +b.dataset.s; renderOptions(); } });
-  $('osSwitch').addEventListener('click', () => { os = os === 'mac' ? 'win' : 'mac'; renderOptions(); });
+  $('osSelect').addEventListener('change', e => { if (osNames[e.target.value]) { os = e.target.value; renderOptions(); } });
   document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { opts.tab = b.id.slice(4); renderOptions(); } });
   $('optDark').addEventListener('change', e => { opts.dark = e.target.checked; renderOptions(); });
   $('optAwake').addEventListener('change', e => { opts.awake = e.target.checked; renderOptions(); });
@@ -111,7 +141,7 @@
   let blocked = 0, holdStart = 0, holdRaf = null, dimTimer = null;
 
   function start() {
-    blocked = 0; renderCount();
+    blocked = 0; renderCount(); pointers.clear();
     $('result').hidden = true;
     $('lock').classList.toggle('light', !opts.dark);
     $('timeBar').hidden = opts.duration === 0;
@@ -225,12 +255,26 @@
    'touchstart', 'touchmove', 'gesturestart', 'gesturechange', 'gestureend']
     .forEach(t => window.addEventListener(t, swallow, { capture: true, passive: false }));
 
+  // Hold-to-unlock needs one still pointer. A wiping cloth moves or touches in several places, which cancels it.
+  // On touchscreens the hold must also be on the status card, since wiping a screen means constant contact.
+  const pointers = new Set();
+  let holdId = null, holdX = 0, holdY = 0;
   window.addEventListener('pointerdown', e => {
     if (!locked) return;
     swallow(e); count(); ripple(e.clientX, e.clientY);
-    if (opts.holdPad && e.button === 0) beginHold('pad');
+    pointers.add(e.pointerId);
+    if (pointers.size > 1) return endHold('pad');
+    const onCard = e.target instanceof Node && $('status').contains(e.target);
+    if (opts.holdPad && e.button === 0 && (e.pointerType !== 'touch' || onCard)) {
+      holdId = e.pointerId; holdX = e.clientX; holdY = e.clientY;
+      beginHold('pad');
+    }
   }, { capture: true, passive: false });
+  window.addEventListener('pointermove', e => {
+    if (locked && holdKind === 'pad' && e.pointerId === holdId && Math.hypot(e.clientX - holdX, e.clientY - holdY) > 12) endHold('pad');
+  }, { capture: true });
   ['pointerup', 'pointercancel', 'mouseup'].forEach(t => window.addEventListener(t, e => {
+    if (e.pointerId !== undefined) pointers.delete(e.pointerId);
     if (!locked) return; swallow(e); endHold('pad');
   }, { capture: true, passive: false }));
 
