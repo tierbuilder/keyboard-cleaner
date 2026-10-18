@@ -41,15 +41,16 @@ The operating system handles some keys before any browser sees them.
 - `public/sitemap.xml`, `public/robots.txt`: for search engines
 - `public/llms.txt`: a plain summary for AI assistants
 - `public/_headers`: security and caching headers for Cloudflare
-- `wrangler.toml`: Cloudflare Pages settings
+- `public/404.html`: page shown for unknown addresses
+- `wrangler.toml`: Cloudflare Worker settings
 
-## Deploy to Cloudflare Pages
+## Deploy to Cloudflare
+
+The site is served by a Cloudflare Worker with static assets (see `wrangler.toml`). Every push to `main` deploys automatically through Cloudflare's Git integration. To deploy by hand:
 
 ```bash
-npx wrangler@3 pages deploy
+npx wrangler deploy
 ```
-
-The first time, sign in with `npx wrangler@3 login`.
 
 ## Run it locally
 
